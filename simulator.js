@@ -8,6 +8,10 @@ const Prizes = Object.freeze({
 let switcWin = 0;
 let stayWin = 0;
 
+/**
+ * Simulates the Monty Hall problem
+ * @param {Number} iterations The number of trials to run
+ */
 function simulateMontyHall(iterations) {
     let doors = new Array(3).fill(Prizes.GOAT);
     doors[getRandInt(3)] = Prizes.CAR;
@@ -19,15 +23,23 @@ function simulateMontyHall(iterations) {
     
 }
 
-// Returns an int between 0 and max, exclusive.
-// getRandInt(5) -> 0, 1, 2, 3, 4
+/**
+ * Generate a random integer between 0 and max, exclusive.
+ * @param {Number} max The upper bound of integers
+ * @returns {Number} A random integer
+ */
 function getRandInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-// Offer a door to optionally switch to
+/**
+ * Offer a prize door to switch to
+ * @param {Array.<Prizes>} doors A list of prize doors
+ * @param {Number} choice The chosen door
+ * @returns {Number} The index of an alternate door
+ */
 function getOption(doors, choice) {
-    // Create a list of the index for each door
+    // Create a list of each door's index
     let indexList = doors.map((doors, i) => i);
 
     // Filter out the chosen door and the door with the car
