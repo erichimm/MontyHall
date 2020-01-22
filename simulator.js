@@ -5,7 +5,7 @@ const Prizes = Object.freeze({
     GOAT: Symbol('goat')
 });
 
-let switcWin = 0;
+let switchWin = 0;
 let stayWin = 0;
 
 /**
@@ -17,10 +17,21 @@ function simulateMontyHall(iterations) {
     doors[getRandInt(3)] = Prizes.CAR;
     
     let choice = getRandInt(3);
-    let switchOption = getOption(doors, choice);
+    let option = getOption(doors, choice);
     console.log(doors);
-    console.log(`Choice: ${choice}\nSwitch: ${switchOption}`);
-    
+    console.log(`Choice: ${choice}\nSwitch: ${option}`);
+
+    // Randomly decide to stay with the original choice, or to switch
+    if(getRandInt(2)) {
+        if(doors[choice] === Prizes.CAR)
+            ++stayWin;
+    } else {
+        console.log("switched!");
+        
+        if(doors[option] === Prizes.CAR)
+            ++switchWin;
+    }
+    console.log(`Stay Win: ${stayWin}\nSwitch Win: ${switchWin}`);
 }
 
 /**
@@ -47,8 +58,11 @@ function getOption(doors, choice) {
          return (doors[index] !== Prizes.CAR) && (index !== choice);
     });
     
-    // Randomly choose one among the remaining doors
-    return options[getRandInt(options.length)];
+    // Randomly choose one among the remaining doors to reveal
+    let revealed = options[getRandInt(options.length)];
+
+    // Offer up the index of the door to switch to
+    return indexList.filter(index => index !== choice && index !== revealed)[0];
 }
 
 simulateMontyHall(NUM_TRIALS);
