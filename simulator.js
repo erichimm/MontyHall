@@ -1,3 +1,8 @@
+/**
+ * Monty Hall simulator
+ * See full problem description here {@link https://en.wikipedia.org/wiki/Monty_Hall_problem}.
+ * @author Eric Himmelblau <erichimmelblau@gmail.com>
+ */
 const NUM_TRIALS = 10000;
 
 const Prizes = Object.freeze({
@@ -17,8 +22,8 @@ console.log("Chance to win if you switch: " + switchWinChance);
  * @returns {Number} The probability to win if you switch
  */
 function simulateMontyHall(iterations) {
-    let switchWin = 0;
-    let stayWin = 0;
+    let switchWins = 0;
+    let stayWins = 0;
     let totalWins = 0;
 
     for(let i = 0; i < iterations; i++) {
@@ -31,18 +36,18 @@ function simulateMontyHall(iterations) {
         // Randomly decide to stay with the original choice, or to switch
         if(getRandInt(2)) {
             if(doors[choice] === Prizes.CAR) {
-                ++stayWin;
+                ++stayWins;
                 ++totalWins;
             }
         } else {
             if(doors[option] === Prizes.CAR) {
-                ++switchWin;
+                ++switchWins;
                 ++totalWins;
             }
         }
     }
 
-    return { stayWinChance: stayWin/totalWins, switchWinChance: switchWin/totalWins };
+    return { stayWinChance: stayWins/totalWins, switchWinChance: switchWins/totalWins };
 }
 
 /**
@@ -69,9 +74,9 @@ function getOption(doors, choice) {
          return (doors[index] !== Prizes.CAR) && (index !== choice);
     });
     
-    // Randomly choose one among the remaining doors to reveal
+    // Randomly choose one door among the options to reveal
     let revealed = options[getRandInt(options.length)];
 
-    // Offer up the index of the door to switch to
+    // Offer up the index of the remaining closed door to switch to
     return indexList.filter(index => index !== choice && index !== revealed)[0];
 }
