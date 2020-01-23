@@ -5,33 +5,44 @@ const Prizes = Object.freeze({
     GOAT: Symbol('goat')
 });
 
-let switchWin = 0;
-let stayWin = 0;
+let { stayWinChance, switchWinChance } = simulateMontyHall(NUM_TRIALS);
+
+console.log("Chance to win if you stay: " + stayWinChance);
+console.log("Chance to win if you switch: " + switchWinChance);
 
 /**
  * Simulates the Monty Hall problem
  * @param {Number} iterations The number of trials to run
+ * @returns {Number} The probability to win if you stay
+ * @returns {Number} The probability to win if you switch
  */
 function simulateMontyHall(iterations) {
-    let doors = new Array(3).fill(Prizes.GOAT);
-    doors[getRandInt(3)] = Prizes.CAR;
-    
-    let choice = getRandInt(3);
-    let option = getOption(doors, choice);
-    console.log(doors);
-    console.log(`Choice: ${choice}\nSwitch: ${option}`);
+    let switchWin = 0;
+    let stayWin = 0;
+    let totalWins = 0;
 
-    // Randomly decide to stay with the original choice, or to switch
-    if(getRandInt(2)) {
-        if(doors[choice] === Prizes.CAR)
-            ++stayWin;
-    } else {
-        console.log("switched!");
+    for(let i = 0; i < iterations; i++) {
+        let doors = new Array(3).fill(Prizes.GOAT);
+        doors[getRandInt(3)] = Prizes.CAR;
         
-        if(doors[option] === Prizes.CAR)
-            ++switchWin;
+        let choice = getRandInt(3);
+        let option = getOption(doors, choice);
+
+        // Randomly decide to stay with the original choice, or to switch
+        if(getRandInt(2)) {
+            if(doors[choice] === Prizes.CAR) {
+                ++stayWin;
+                ++totalWins;
+            }
+        } else {
+            if(doors[option] === Prizes.CAR) {
+                ++switchWin;
+                ++totalWins;
+            }
+        }
     }
-    console.log(`Stay Win: ${stayWin}\nSwitch Win: ${switchWin}`);
+
+    return { stayWinChance: stayWin/totalWins, switchWinChance: switchWin/totalWins };
 }
 
 /**
@@ -64,5 +75,3 @@ function getOption(doors, choice) {
     // Offer up the index of the door to switch to
     return indexList.filter(index => index !== choice && index !== revealed)[0];
 }
-
-simulateMontyHall(NUM_TRIALS);
